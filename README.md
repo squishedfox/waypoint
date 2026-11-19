@@ -7,6 +7,12 @@ Personal project for building a freight logistics platform because I like the lo
 - [graphql-go/graphql](https://github.com/graphql-go/graphql)
 - [graphql-go/handler](https://github.com/graphql-go/handler)
 
+## Develop
+
+### Getting Started
+
+- Run the app with `docker compose up --build`
+
 ## Domains
 
 - [ ] Master Data Management
