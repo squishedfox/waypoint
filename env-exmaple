@@ -1,0 +1,2 @@
+# Copy this file and name it .env
+POSTGRES_PASSWORD=change-this-for-local-development
