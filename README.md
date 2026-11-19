@@ -2,6 +2,11 @@
 
 Personal project for building a freight logistics platform because I like the logistics of figuring out logistics.
 
+## Thank You
+
+- [graphql-go/graphql](https://github.com/graphql-go/graphql)
+- [graphql-go/handler](https://github.com/graphql-go/handler)
+
 ## Domains
 
 - [ ] Master Data Management
