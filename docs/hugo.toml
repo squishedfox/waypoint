@@ -1,0 +1,4 @@
+baseURL = 'https://waypoint.dev/'
+locale = 'en-us'
+title = 'Waypoint'
+theme = 'hugo-theme-relearn'
