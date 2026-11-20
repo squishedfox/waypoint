@@ -9,9 +9,15 @@ Personal project for building a freight logistics platform because I like the lo
 
 ## Develop
 
+## Tools
+
+- An IDE e.g. NeoVim, Zed, or Visual Studio Code for writing Code
+- A database explorer e.g. DBeaver, BeeKeeper, pgAdmin
+
 ### Getting Started
 
 - Run the app with `docker compose up --build`
+- Force refresh postgres seed/migrations `docker compose down -v && docker compose up -d`
 
 ## Domains
 
