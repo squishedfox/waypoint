@@ -2,6 +2,7 @@ package graph
 
 import (
 	"github.com/graphql-go/graphql"
+	"github.com/squishedfox/waypoint/database"
 )
 
 // Schema attempts to parse the schema for all the models or panics if there is a parsing
@@ -15,6 +16,20 @@ func Schema() *graphql.Schema {
 					Type: graphql.String,
 					Resolve: func(p graphql.ResolveParams) (any, error) {
 						return "world", nil
+					},
+				},
+				"status": &graphql.Field{
+					Type: graphql.String,
+					Resolve: func(p graphql.ResolveParams) (any, error) {
+						conn, err := database.GetConnection(p.Context)
+						if err != nil {
+							return nil, err
+						}
+						err = conn.Ping(p.Context)
+						if err != nil {
+							return nil, err
+						}
+						return "OK", nil
 					},
 				},
 			},

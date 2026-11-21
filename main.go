@@ -11,8 +11,28 @@ import (
 
 	"github.com/graphql-go/handler"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/squishedfox/waypoint/database"
 	"github.com/squishedfox/waypoint/graph"
+	"github.com/squishedfox/waypoint/middleware"
 )
+
+// DbConn injects a `*pgxpool.Conn` into the request context and releases it
+// when the request completes.
+func ConnectionMiddleware(pool *pgxpool.Pool) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			conn, err := pool.Acquire(r.Context())
+			if err != nil {
+				http.Error(w, "failed to acquire database connection", http.StatusServiceUnavailable)
+				return
+			}
+			defer conn.Release()
+
+			ctx := database.WithConnection(r.Context(), conn)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
 
 func connectDB() (*pgxpool.Pool, error) {
 	host := os.Getenv("DB_HOST")
@@ -67,12 +87,15 @@ func main() {
 		Schema:     schema,
 		Playground: true,
 	}
+
 	h := handler.New(config)
-	http.Handle("/graphql", h)
+
+	wrappedHandler := middleware.Chain(ConnectionMiddleware(db))(h)
+	http.Handle("/graphql", wrappedHandler)
 
 	addr := GetAddr()
 
 	log.Printf("Listening on %s", addr)
 
-	http.ListenAndServe(addr, h)
+	http.ListenAndServe(addr, wrappedHandler)
 }
